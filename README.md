@@ -4,7 +4,8 @@
    https://get.jenkins.io/war-stable/2.303.3/jenkins.war
 2. Run the Jenkins war file  
    `java -jar jenkins.war`
-   > Note the unlock password and unlock the Jenkins using https://localhost:8080
+   > Note the unlock password and unlock the Jenkins using https://localhost:8080  
+   > Initial unlock password may also be found at: /home/master/.jenkins/secrets/initialAdminPassword  
 3. Add the jenkins to system startup
    ```sh
    vi ~/.bashrc
