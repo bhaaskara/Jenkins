@@ -3,13 +3,14 @@
 ### Prereqs
 **Disable SELINUX**  
 **Disable firewall**  
+**Install Java**
 1. **Disable SELINUX**    
    Check the current SELinux status
-   ```
+   ```sh
    sudo sestatus
    ```
    Disable SELinux temporarily
-   ```
+   ```sh
    sudo setenforce 0
    ```
    Check it with `getenforce`  
@@ -23,28 +24,45 @@
    Reboot the server `init 6`  
 2. **Disable firewall**  
    Check the firewall status
-   ```
+   ```sh
    sudo firewall-cmd --state
    ```
    Stop the firewall
-   ```
+   ```sh
    sudo systemctl stop firewalld
    ```
    Disable it permanantly
-   ```
+   ```sh
    sudo systemctl disable firewalld
    ```
-   Mask the FirewallD service which will prevent the firewall being started by other services
-   ```
+   Mask the FirewallD service from being started by other services
+   ```sh
    sudo systemctl mask --now firewalld
    ```
+3. **Install Java**
+   ```sh
+   yum install java-11-openjdk-devel
+   ```
 ### Install Jenkins
-```
+```sh
 sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
 sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+yum install epel-release # repository that provides 'daemonize'
 sudo yum upgrade
+sudo yum install jenkins -y
+sudo systemctl daemon-reload
 ```
-`IMPORTANT`
+Start jenkins
+```sh
+sudo systemctl start jenkins
+```
+check status
+```sh
+sudo systemctl status jenkins
+```
+
+## Installation Issues
+### Daemonize not found error
 ```sh
 sudo vi /etc/yum.repos.d/epelfordaemonize.repo 
 #Add the following:
@@ -53,22 +71,18 @@ baseurl=https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/
 gpgcheck=no
 enabled=yes
 ```
-```
+```sh
 sudo yum install -y daemonize
 ```
-> if this succeed, proceed and install Jenkins
-```
-sudo yum install jenkins -y
-sudo systemctl daemon-reload
-```
-Start jenkins
-```
-sudo systemctl start jenkins
-```
-check status
-```
-sudo systemctl status jenkins
-```
+> If daemonize installation fails with above method,  
+> download the latest release (https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/d/daemonize-1.7.7-1.el7.x86_64.rpm)  
+> Install with `yum localinstall <rpm file>`  
+
+
+### Jenkins.*.noarch.rpm file not found
+Download the latest release from https://jenkins.io/redhat-stable/  
+Install with `yum localinstall <rpm file>`  
+
 ## Install Jenkins using war file
 1. Download the war file  
    https://get.jenkins.io/war-stable/2.303.3/jenkins.war
