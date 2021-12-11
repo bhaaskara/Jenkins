@@ -106,7 +106,6 @@ sudo yum install -y daemonize
 > download the latest release (https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/d/daemonize-1.7.7-1.el7.x86_64.rpm)  
 > Install with `yum localinstall <rpm file>`  
 
-
 ### Jenkins.*.noarch.rpm file not found
 Download the latest release from https://jenkins.io/redhat-stable/  
 Install with `yum localinstall <rpm file>`  
@@ -124,3 +123,16 @@ Install with `yum localinstall <rpm file>`
    #add the below line at the end
    nohup java -jar /home/master/jenkins/jenkins.war > /dev/null 2>&1 &
    ```
+# Master node isolation / Disable jobs on master node
+Out of the box, Jenkins is set up to run builds on the built-in node. This is to make it easier to get started with Jenkins, but is inadvisable longer term: Any builds running on the built-in node have the same level of access to the controller file system as the Jenkins process.
+
+It is therefore highly advisable to not run any builds on the built-in node, instead using agents (statically configured or provided by clouds) to run builds.
+
+To prevent builds from running on the built-in node directly, 
+```navigate to 
+Manage Jenkins » Manage Nodes and Clouds
+Select master in the list
+select Configure in the menu 
+Set the number of executors to 0 and save
+```
+> Make sure to also set up clouds or build agents to run builds on, otherwise builds won’t be able to start.  
