@@ -1,4 +1,32 @@
 # Install Jenkins
+## Install Jenkins on Ubuntu 20.04
+### Prereqs
+**Disable firewall**  
+**Install Java**
+
+1. **Disable firewall**  
+   Check the firewall status
+   ```sh
+   sudo ufw status
+   ```
+   Disable firewall
+   ```sh
+   sudo ufw disable
+   ```
+3. **Install Java**
+   ```sh
+   sudo apt-get install -y java-11-openjdk-devel
+   ```
+### Install Jenkins
+```sh
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins
+```
+**Check the Jenkins service status**  
+`system status jenkins`
+
 ## Install Jenkins on Centos 7.7
 ### Prereqs
 **Disable SELINUX**  
