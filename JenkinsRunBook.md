@@ -136,3 +136,16 @@ select Configure in the menu
 Set the number of executors to 0 and save
 ```
 > Make sure to also set up clouds or build agents to run builds on, otherwise builds won’t be able to start.  
+
+# Install Jenkins plugins manually
+**1:** Download plugin from Jenkins plugin directory.  
+`https://updates.jenkins-ci.org/download/plugins/`
+
+**2:** Here you find your desired plugin and click on plugin name, now .hpi file will be downloaded.
+
+**3:** Now open Jenkins and go to 
+     `Manage Jenkins > Manage Plugins > Advance configuration`(tab)
+
+**4:** Upload `your-plugin.hpi` file and save.
+
+**5:** Restart Jenkins.
