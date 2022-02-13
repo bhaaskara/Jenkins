@@ -149,3 +149,7 @@ Set the number of executors to 0 and save
 **4:** Upload `your-plugin.hpi` file and save.
 
 **5:** Restart Jenkins.
+
+# view all jenkins labels
+https://stackoverflow.com/questions/27384481/view-all-labels-in-jenkins
+
