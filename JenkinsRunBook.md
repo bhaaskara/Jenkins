@@ -1,8 +1,8 @@
 # Install Jenkins
 ## Install Jenkins on Ubuntu 20.04
 ### Prereqs
-**Disable firewall**  
-**Install Java**
+1.  **Disable firewall**  
+2. **Install Java**
 
 1. **Disable firewall**  
    Check the firewall status
@@ -13,10 +13,11 @@
    ```sh
    sudo ufw disable
    ```
-3. **Install Java**
+2. **Install Java**
    ```sh
    sudo apt-get install -y java-11-openjdk-devel
    ```
+
 ### Install Jenkins
 ```sh
 curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
@@ -29,9 +30,10 @@ sudo apt-get install jenkins
 
 ## Install Jenkins on Centos 7.7
 ### Prereqs
-**Disable SELINUX**  
-**Disable firewall**  
-**Install Java**
+1. **Disable SELINUX**  
+2. **Disable firewall**  
+3. **Install Java**
+
 1. **Disable SELINUX**    
    Check the current SELinux status
    ```sh
@@ -89,6 +91,8 @@ check status
 sudo systemctl status jenkins
 ```
 
+### Uninstall Jenkins
+`yum remove jenkins`
 ## Installation Issues
 ### Daemonize not found error
 ```sh
@@ -153,3 +157,103 @@ Set the number of executors to 0 and save
 # view all jenkins labels
 https://stackoverflow.com/questions/27384481/view-all-labels-in-jenkins
 
+# Helloworld job
+1.  Login to Jenkins server: `<serverip>:8080`
+2. NewItem -> `<enter name>` -> Freestyle job -> ok
+3. Build environment -> Execute shell (for linux server) -> enter Linux commands -> save
+    ![](Pasted%20image%2020220403220931.png)
+4. To run the Job: click on Build now
+    ![](Pasted%20image%2020220403221308.png)
+    Job status can be seen in Build history.
+5. For the script/commands o/p check the console o/p in build history.
+
+# Integrate Git with Jenkins
+1. Install Git on Jenkins instance
+2. Install Github plugin on Jenkins
+3. Configure Git on Jenkins 
+
+## Install Git on Jenkins instance
+**Centos 7**
+`sudo yum install git -y`
+`git --version`
+
+## Install github plugin on jenkins
+Jenkins -> Manage Jenkins -> Manage Plugins -> Available -> `search for github`
+
+## Configure Git on Jenkins
+Jenkins -> manage jenkins -> Global tool configuration 
+![](Pasted%20image%2020220405231413.png)
+Note: path can be found by `whereis git` command.
+
+# Integrate maven with Jenkins
+1. Install maven on jenkins server
+2. setup environment variables
+    JAVA_HOME, M2, M2_HOME
+3. Install maven plugin on jenkins
+4. configure maven and java on jenkins
+
+## 1. Install maven on jenkins server
+`sudo yum install maven -y` # centos 7
+`mvn -version`
+
+## 2. Setup environment variables
+```/root/.bash_profile
+# .bash_profile
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+        . ~/.bashrc
+fi
+
+# User specific environment and startup programs
+JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.322.b06-1.el7_9.x86_64
+M2=/usr/bin/mvn #which maven
+M2_HOME=/usr/share/maven #mvn -version
+
+PATH=$PATH:$HOME/bin:$JAVA_HOME:$M2:M2_HOME
+```
+`sudo su -`
+`source .bash_profile`
+
+## 3. Install maven plugin on Jenkins
+Jenkins -> manage jenkins -> manage plgins -> available -> maven integration
+
+## 4. configure maven and java on jenkins
+Jenkins -> manage jenkins -> global tool configuration -> maven
+![](Pasted%20image%2020220406172138.png)
+Jenkins -> manage jenkins ->  global tool configuration -> JDK
+![](Pasted%20image%2020220406172009.png)
+Note: wait for a while for the error to go off
+
+# Build a Java project using jenkins
+>**Pre reqs**: mvn and git on jenkins server
+
+**Create Jenkins job**
+Jenkins -> new item -> maven project
+
+![](Pasted%20image%2020220406191336.png)
+add Git repo and other options are default
+
+# Integrating tomcat server in CI/CD pipeline
+**_Deploy artifacts onto a tomcat server_**
+![](Pasted%20image%2020220409190021.png)
+### Setup a tomcat server
+```
+1. Install Java
+2. Configure tomcat
+3. start tomcat server
+4. access webUI on port 8080
+```
+### Integrate Tomcat server with Jenkins
+```
+1. Install "deploy to container" jenkins plugin
+2. configure tomcat server with credentials
+```
+
+**1. Install "deploy to container" jenkins plugin**
+Jenkins -> manage jenkins -> manage plugins -> available -> search for "deploy to container"
+
+**2. configure tomcat server with credentials**
+**Add credential in Jenkins**
+Jenkins -> manage jenkins -> manage credeantilas -> Jenkins -> Global credentials -> add credentials
+3. 

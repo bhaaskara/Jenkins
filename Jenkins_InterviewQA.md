@@ -20,7 +20,7 @@ The build either passes or fails
 Generate feedback
 (img)![url]
 
-# Benifits of using Jenkins
+# Benefits of using Jenkins
 Catch build failures
 Automatic build report notification
 achive CI
@@ -29,3 +29,11 @@ Easy tracking of bugs
 # Jenkins pre-reqs
 Installation  
 JRE (Java runtime environment)
+
+# Jenkins workspace
+All the jenkins build activity happens under Jenkins workspace
+```
+/var/lib/jenkins/workspace/<jobname>
+```
+
+
