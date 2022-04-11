@@ -255,5 +255,12 @@ Jenkins -> manage jenkins -> manage plugins -> available -> search for "deploy t
 
 **2. configure tomcat server with credentials**
 **Add credential in Jenkins**
-Jenkins -> manage jenkins -> manage credeantilas -> Jenkins -> Global credentials -> add credentials
-3. 
+Jenkins -> manage jenkins -> manage credentials -> Jenkins -> Global credentials -> add credentials
+![](Pasted%20image%2020220410220341.png)
+
+## create a Job to deploy on to tomcat server
+> Create a job with Git source code and maven as build trigger then add post build step to deply onto tomcat server.
+
+![](Pasted%20image%2020220410220659.png)
+![](Pasted%20image%2020220410221214.png)
+
