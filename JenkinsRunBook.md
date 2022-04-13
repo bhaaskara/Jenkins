@@ -264,3 +264,124 @@ Jenkins -> manage jenkins -> manage credentials -> Jenkins -> Global credentials
 ![](Pasted%20image%2020220410220659.png)
 ![](Pasted%20image%2020220410221214.png)
 
+# Integrating Kubernetes in CI/CD pipeline
+![](Pasted%20image%2020220413200315.png)
+
+## 1. Configure bootstrap server (EC2) to access AWS EKS.
+1. Install AWS CLI
+2. Install EKSCTL
+3. Install kubectl
+4. Assign AWS Role to the server (EC2 instance)
+
+## 2. Integrate Kubernetes with Ansible
+![](Pasted%20image%2020220413173141.png)
+
+**On Bootstrap server**
+1. Create ansadmin user
+    ```sh
+    useradd ansadmin
+    passwd ansadmin # Set password
+    ```
+
+2. Add ansadmin to sudoers file
+    ```sh
+    visudo
+    ...
+    #add below line next to root
+    ansadmin ALL=(ALL) NOPASSWD: ALL
+```    
+
+3. Enable password based login
+    ```sh
+    vi /etc/ssh/sshd_config
+    ...
+    # enable PasswordAuthentication yes and comment out PasswordAuthrntication no
+
+    service sshd reload # Reload teh service
+```
+
+**On Ansible node**
+1. Add bootstrap server to hosts file
+    ```sh
+    vi hosts
+    localhost
+    
+    [kubernetes]
+    172.31.28.76 #bootstarp server ip
+    
+    [ansible]
+    172.31.30.109
+```
+
+2. Copy ssh keys on to bootstrap server
+    `ssh-copy-id _bootstarp serveip_ `
+    `ssh-copy-id root@_bootstapServerIP_  #copy ssh keys onto root user`
+
+3. Test the connection
+    `ansible -i hosts all -a uptimne`
+
+## 3. Create ansible play book for deploy and service files
+```yml
+- hosts: kubernetes
+  #become: true  #run as root user
+  user: root
+  
+  tasks:
+  - name: Deply regapp onto k8s
+    command: kubectl create -f /root/deploy.yml
+```
+
+service.yml
+```yml
+- hosts: kubernetes
+  #become: true  #run as root user
+  user: root
+  
+  tasks:
+  - name: Deply service onto k8s
+    command: kubectl create -f /root/service.yml
+```
+
+Update deployment.yml
+```yml
+- hosts: kubernetes
+  #become: true  #run as root user
+  user: root
+  
+  tasks:
+  - name: Deply regapp onto k8s
+    command: kubectl create -f /root/deploy.yml
+
+  - name: update deployment with new pods if image updated in the docker hub
+    command: kubectl rollout restart deployment.apps/valaxy-app
+```
+## 4. Create Jenkins deployment job for Kubernetes
+Jenkins -> new job -> free style job -> post build actions -> send build artifacts over ssh -> select ansible server
+
+
+![](Pasted%20image%2020220413200744.png)
+
+> Note: in this job no need to configure Git and others
+
+## 5. CI job to create image for kubernetes
+Create_docker_image.yml
+```yml
+- hosts: ansible
+
+  tasks:
+  - name: Create docker image
+    command: docker build -t regapp:latest .
+    args:
+      chdir: /opt/docker
+  
+  - name: create tag to push to docker hub
+    command: docker tag regapp:latest valaxy/regapp:latest
+
+  - name: push docker image
+    command: docker push valaxy/regapp:latest
+```
+
+Jenkins -> new job -> free style job -> post build actions -> send build artifacts over ssh -> select ansible server
+
+![](Pasted%20image%2020220413211724.png)
+
