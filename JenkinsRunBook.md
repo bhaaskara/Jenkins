@@ -168,9 +168,11 @@ https://stackoverflow.com/questions/27384481/view-all-labels-in-jenkins
 5. For the script/commands o/p check the console o/p in build history.
 
 # Integrate Git with Jenkins
+```
 1. Install Git on Jenkins instance
 2. Install Github plugin on Jenkins
 3. Configure Git on Jenkins 
+```
 
 ## Install Git on Jenkins instance
 **Centos 7**
