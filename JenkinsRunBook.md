@@ -387,3 +387,36 @@ Jenkins -> new job -> free style job -> post build actions -> send build artifac
 
 ![](Pasted%20image%2020220413211724.png)
 
+
+# How to trigger a Jenkins pipeline A in another Jenkins pipeline B
+```yaml
+pipeline {
+agent
+    {
+        node {
+                label 'master'
+                customWorkspace "${env.JobPath}"
+              }
+    }
+    stages 
+    {
+        stage('Start') {
+            steps {
+                echo 'Hello'
+            }
+        }
+        stage ('Invoke_pipelineA') {
+            steps {
+                build job: 'pipelineA', parameters: [
+                string(name: 'param1', value: "value1")
+                ]
+            }
+        }
+        stage('End') {
+            steps {
+                echo 'Bye'
+            }
+        }
+    }
+}
+```
